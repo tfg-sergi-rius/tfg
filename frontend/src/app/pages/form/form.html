@@ -1,0 +1,85 @@
+<div class="form-page">
+
+  <div class="form-container">
+
+    <h1>Troba el teu <span>TFG ideal</span></h1>
+
+    <p>
+      Respon algunes preguntes i generarem idees de TFG
+      personalitzades segons els teus interessos.
+    </p>
+
+    <form>
+
+      <div class="form-group">
+        <label>Carrera</label>
+        <input
+          type="text"
+          [(ngModel)]="formData.carrera"
+          name="carrera"
+          placeholder="Ex: Informatica">
+      </div>
+
+      <div class="form-group">
+        <label>Area que t'interessa</label>
+        <input
+          type="text"
+          [(ngModel)]="formData.area"
+          name="area"
+          placeholder="Ex: Matematiques, programacio...">
+      </div>
+
+      <div class="form-group">
+        <label>Tecnologies preferides</label>
+        <input
+          type="text"
+          [(ngModel)]="formData.tecnologias"
+          name="tecnologias"
+          placeholder="Angular, Python, etc">
+      </div>
+
+      <div class="form-group">
+        <label>Dificultat desitjada</label>
+        <select
+          [(ngModel)]="formData.dificultad"
+          name="dificultad">
+
+          <option value="baixa">Baixa</option>
+          <option value="mitjana">Mitjana</option>
+          <option value="alta">Alta</option>
+
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Interes principal</label>
+        <input
+          type="text"
+          [(ngModel)]="formData.interes"
+          name="interes"
+          placeholder="IA, dades, aplicacions...">
+      </div>
+
+      <!-- BOTÓN MEJORADO -->
+      <button
+        type="button"
+        class="submit-btn"
+        (click)="submitForm()"
+        [disabled]="loading">
+
+        <span *ngIf="!loading">
+          Generar idees de TFG
+        </span>
+
+        <span *ngIf="loading" class="loading-btn">
+          <span class="mini-spinner"></span>
+          Generant...
+        </span>
+
+      </button>
+
+    </form>
+
+  </div>
+
+</div>

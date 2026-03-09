@@ -1,0 +1,43 @@
+<div class="results-page">
+
+  <h1 class="title">Idees de TFG generades</h1>
+
+  <!-- PANTALLA DE CARGA -->
+  <div *ngIf="loading" class="loading">
+
+    <p>Generant idees amb IA...</p>
+
+    <div class="spinner"></div>
+
+  </div>
+
+  <!-- CARRUSEL -->
+  <ngb-carousel *ngIf="!loading && ideas.length > 0">
+
+    <ng-template ngbSlide *ngFor="let idea of ideas">
+
+      <div class="idea-card">
+
+        <h2 class="idea-title">
+          {{ idea.title }}
+        </h2>
+
+        <p class="idea-description">
+          {{ idea.description }}
+        </p>
+
+        <div class="tech-list">
+
+          <span class="tech" *ngFor="let tech of idea.technologies">
+            {{ tech }}
+          </span>
+
+        </div>
+
+      </div>
+
+    </ng-template>
+
+  </ngb-carousel>
+
+</div>
