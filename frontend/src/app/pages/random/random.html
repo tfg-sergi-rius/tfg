@@ -1,0 +1,27 @@
+<div class="random-page">
+  <button
+    type="button"
+    class="back-btn"
+    (click)="goBack()">
+    <span class="material-symbols-outlined">arrow_back</span>
+    Tornar
+  </button>
+
+  <h1 class="title">TFG aleatori</h1>
+
+  <div *ngIf="loading" class="loading">
+    <p>Generant una idea sorpresa...</p>
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!loading && idea" class="idea-card">
+    <h2 class="idea-title">{{ idea.title }}</h2>
+    <p class="idea-description">{{ idea.description }}</p>
+
+    <div class="tech-list">
+      <span class="tech" *ngFor="let tech of idea.technologies">
+        {{ tech }}
+      </span>
+    </div>
+  </div>
+</div>

@@ -1,43 +1,78 @@
 <div class="results-page">
+  <div class="results-glow results-glow-one"></div>
+  <div class="results-glow results-glow-two"></div>
+  <div class="results-grid"></div>
 
-  <h1 class="title">Idees de TFG generades</h1>
+  <button
+    type="button"
+    class="back-btn"
+    (click)="goBack()">
+    <span class="material-symbols-outlined">arrow_back</span>
+    Tornar
+  </button>
 
-  <!-- PANTALLA DE CARGA -->
-  <div *ngIf="loading" class="loading">
+  <div class="results-shell">
+    <div class="results-header">
+      <h1 class="title">Idees de TFG generades</h1>
+      <p class="results-intro">
+        Aquestes son les propostes que encaixen amb les respostes del teu
+        briefing. Navega entre elles i queda't amb la que tingui mes potencial.
+      </p>
+    </div>
 
-    <p>Generant idees amb IA...</p>
+    <div *ngIf="loading" class="loading">
+      <p>Generant idees amb IA...</p>
+      <div class="spinner"></div>
+    </div>
 
-    <div class="spinner"></div>
+    <ngb-carousel *ngIf="!loading && ideas.length > 0">
+      <ng-template ngbSlide *ngFor="let idea of ideas; let index = index">
+        <div class="idea-card">
+          <div class="idea-meta">
+            <span class="idea-badge">Propuesta {{ index + 1 }}</span>
+          </div>
 
-  </div>
+          <h2 class="idea-title">
+            {{ idea.title }}
+          </h2>
 
-  <!-- CARRUSEL -->
-  <ngb-carousel *ngIf="!loading && ideas.length > 0">
+          <p class="idea-description">
+            {{ idea.description }}
+          </p>
 
-    <ng-template ngbSlide *ngFor="let idea of ideas">
-
-      <div class="idea-card">
-
-        <h2 class="idea-title">
-          {{ idea.title }}
-        </h2>
-
-        <p class="idea-description">
-          {{ idea.description }}
-        </p>
-
-        <div class="tech-list">
-
-          <span class="tech" *ngFor="let tech of idea.technologies">
-            {{ tech }}
-          </span>
-
+          <div class="tech-list">
+            <span class="tech" *ngFor="let tech of idea.technologies">
+              {{ tech }}
+            </span>
+          </div>
         </div>
+      </ng-template>
+    </ngb-carousel>
 
+    <div *ngIf="!loading && ideas.length > 0" class="rating-panel">
+      <span class="rating-kicker">Valora aquestes idees</span>
+      <h2>Quina puntuacio els dones?</h2>
+      <div class="rating-stars">
+        <button
+          *ngFor="let star of stars"
+          type="button"
+          class="star-btn"
+          [class.active]="star <= rating"
+          [disabled]="savingRating"
+          (click)="setRating(star)">
+          &#9733;
+        </button>
       </div>
+      <p class="rating-note">
+        {{ rating > 0 ? 'Valoracio guardada: ' + rating + '/5' : 'Encara no has valorat aquestes idees.' }}
+      </p>
+    </div>
 
-    </ng-template>
-
-  </ngb-carousel>
+    <div *ngIf="!loading && ideas.length === 0" class="empty-state">
+      <span class="empty-kicker">Sense resultats</span>
+      <h2>No hem trobat idees per mostrar.</h2>
+      <p>Torna al formulari, ajusta les respostes i genera una nova proposta.</p>
+    </div>
+  </div>
 
 </div>

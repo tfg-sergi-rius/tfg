@@ -1,18 +1,18 @@
 <div class="hero">
+  <div class="hero-glow hero-glow-one"></div>
+  <div class="hero-glow hero-glow-two"></div>
+  <div class="hero-grid"></div>
 
   <nav class="navbar">
-    <div class="logo">TFG Finder</div>
+    <a class="logo" routerLink="/">TFG Finder</a>
 
     <div class="menu">
-      <a>Algo</a>
-      <a>Algo2</a>
-      <a>Algo3</a>
-      <a>Contact</a>
+      <a routerLink="/random">Get me a random TFG</a>
+      <a routerLink="/about-us">About us</a>
+      <a routerLink="/contact">Contact</a>
     </div>
 
-    <button class="login-btn">
-      Start
-    </button>
+    <a class="nav-start-btn" routerLink="/form">Start</a>
   </nav>
 
   <div class="hero-content">
@@ -36,22 +36,36 @@
           Averigua quin TFG s'adapten millor a tu
         </button>
 
-        <!-- <button class="secondary-btn" routerLink="/form"> Boto extra per mes -->
-          
-        <!-- </button> -->
+        <button class="secondary-btn" routerLink="/random">
+          Genera'm un TFG random
+        </button>
 
+      </div>
+
+      <div class="hero-note">
+        <span class="hero-note-label">Per a qui es</span>
+        <p>
+          Pensat per estudiants que volen passar de la indecisio inicial
+          a una proposta de projecte concreta, viable i atractiva.
+        </p>
       </div>
 
     </div>
 
     <div class="hero-right">
+      <div class="stats-shell">
+        <div class="stats-header">
+          <span class="stats-kicker">Activitat de la plataforma</span>
+        </div>
 
-      <div class="card">Possibles Estadistiques/<br> notes/ cursos?</div>
-      <div class="card">Fotos que siguin grafics o<br> algo sobre el contentament de la app</div>
-      <div class="card">Boto de idees randoms? (que no <br>tinguin que fer la enquesta ni res)</div>
+        <div class="card stat-card" *ngFor="let stat of stats">
+          <span class="stat-value">{{ stat.value }}</span>
+          <h2 class="stat-title">{{ stat.title }}</h2>
+          <p class="stat-description">{{ stat.description }}</p>
+        </div>
+      </div>
 
     </div>
 
   </div>
-
 </div>

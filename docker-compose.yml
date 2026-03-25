@@ -1,0 +1,24 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      SQLITE_FILE_NAME: /app/data/database.db
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend-data:/app/data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+
+volumes:
+  backend-data:

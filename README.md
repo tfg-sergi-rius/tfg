@@ -1,1 +1,45 @@
-# tfg
+# TFG
+
+Aplicacion con frontend en Angular y backend en FastAPI para generar ideas de TFG con OpenAI.
+
+## Requisitos
+
+- Docker Desktop o Docker Engine con Compose
+- Una clave valida de OpenAI
+
+## Ejecutar con Docker Compose
+
+1. Crea un archivo `.env` en la raiz del proyecto a partir de `.env.example`:
+
+```env
+OPENAI_API_KEY=tu_clave_real
+```
+Set-Content -Path .env -Value "OPENAI_API_KEY=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"
+2. Levanta los servicios:
+
+```bash
+docker compose up --build
+```
+
+3. Accede a:
+
+- Frontend: `http://localhost:4200`
+- Backend: `http://localhost:8000`
+- Swagger: `http://localhost:8000/docs`
+
+## Servicios incluidos
+
+- `frontend`
+  Sirve la aplicacion Angular con `nginx`.
+- `backend`
+  Expone la API FastAPI en el puerto `8000`.
+
+El frontend en Docker usa `/api` y `nginx` hace proxy hacia el backend dentro de Compose.
+
+## Persistencia
+
+La base de datos SQLite se guarda en el volumen `backend-data`.
+
+## Licencia
+
+MIT. Consulta `LICENSE`.

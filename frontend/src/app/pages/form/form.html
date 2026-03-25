@@ -1,85 +1,125 @@
 <div class="form-page">
+  <div class="form-glow form-glow-one"></div>
+  <div class="form-glow form-glow-two"></div>
+  <div class="form-grid"></div>
 
-  <div class="form-container">
+  <button
+    type="button"
+    class="back-btn"
+    (click)="goBack()">
+    <span class="material-symbols-outlined">arrow_back</span>
+    Tornar
+  </button>
 
-    <h1>Troba el teu <span>TFG ideal</span></h1>
+  <div class="form-layout">
+    <section class="form-intro">
+      <span class="form-kicker">Brief creatiu del teu projecte</span>
+      <h1>Troba el teu <span>TFG ideal</span></h1>
 
-    <p>
-      Respon algunes preguntes i generarem idees de TFG
-      personalitzades segons els teus interessos.
-    </p>
+      <p class="intro-copy">
+        Respon unes quantes preguntes i convertirem els teus interessos en
+        propostes de TFG clares, viables i alineades amb el teu perfil.
+      </p>
 
-    <form>
+      <div class="intro-panel">
+        <span class="intro-panel-label">Que tindras al final</span>
+        <ul class="intro-list">
+          <li>Idees de TFG amb enfocament concret.</li>
+          <li>Tecnologies i tematiques alineades amb el teu perfil.</li>
+          <li>Propostes pensades per passar de bloqueig a direccio.</li>
+        </ul>
+      </div>
+    </section>
 
-      <div class="form-group">
-        <label>Carrera</label>
-        <input
-          type="text"
-          [(ngModel)]="formData.carrera"
-          name="carrera"
-          placeholder="Ex: Informatica">
+    <div class="form-container">
+      <div class="form-header">
+        <span class="form-chip">Formulari</span>
+        <p>
+          Omple aquest briefing i et proposarem idees que tinguin sentit
+          per al teu context academic i tecnologic.
+        </p>
       </div>
 
-      <div class="form-group">
-        <label>Area que t'interessa</label>
-        <input
-          type="text"
-          [(ngModel)]="formData.area"
-          name="area"
-          placeholder="Ex: Matematiques, programacio...">
-      </div>
+      <form>
+        <div class="form-grid-fields">
+          <div class="form-column">
+            <div class="form-group">
+              <label for="carrera">Carrera</label>
+              <input
+                id="carrera"
+                type="text"
+                [(ngModel)]="formData.carrera"
+                name="carrera"
+                placeholder="Ex: Informatica">
+            </div>
 
-      <div class="form-group">
-        <label>Tecnologies preferides</label>
-        <input
-          type="text"
-          [(ngModel)]="formData.tecnologias"
-          name="tecnologias"
-          placeholder="Angular, Python, etc">
-      </div>
+            <div class="form-group">
+              <label for="area">Area que t'interessa</label>
+              <input
+                id="area"
+                type="text"
+                [(ngModel)]="formData.area"
+                name="area"
+                placeholder="Ex: Matematiques, programacio...">
+            </div>
 
-      <div class="form-group">
-        <label>Dificultat desitjada</label>
-        <select
-          [(ngModel)]="formData.dificultad"
-          name="dificultad">
+            <div class="form-group">
+              <label for="tecnologias">Tecnologies preferides</label>
+              <input
+                id="tecnologias"
+                type="text"
+                [(ngModel)]="formData.tecnologias"
+                name="tecnologias"
+                placeholder="Angular, Python, etc">
+            </div>
+          </div>
 
-          <option value="baixa">Baixa</option>
-          <option value="mitjana">Mitjana</option>
-          <option value="alta">Alta</option>
+          <div class="form-column">
+            <div class="form-group">
+              <label for="dificultad">Dificultat desitjada</label>
+              <select
+                id="dificultad"
+                [(ngModel)]="formData.dificultad"
+                name="dificultad">
 
-        </select>
-      </div>
+                <option value="">Selecciona una opcio</option>
+                <option value="baixa">Baixa</option>
+                <option value="mitjana">Mitjana</option>
+                <option value="alta">Alta</option>
 
-      <div class="form-group">
-        <label>Interes principal</label>
-        <input
-          type="text"
-          [(ngModel)]="formData.interes"
-          name="interes"
-          placeholder="IA, dades, aplicacions...">
-      </div>
+              </select>
+            </div>
 
-      <!-- BOTÓN MEJORADO -->
-      <button
-        type="button"
-        class="submit-btn"
-        (click)="submitForm()"
-        [disabled]="loading">
+            <div class="form-group">
+              <label for="interes">Interes principal</label>
+              <input
+                id="interes"
+                type="text"
+                [(ngModel)]="formData.interes"
+                name="interes"
+                placeholder="IA, dades, aplicacions...">
+            </div>
+          </div>
+        </div>
 
-        <span *ngIf="!loading">
-          Generar idees de TFG
-        </span>
 
-        <span *ngIf="loading" class="loading-btn">
-          <span class="mini-spinner"></span>
-          Generant...
-        </span>
+        <button
+          type="button"
+          class="submit-btn"
+          (click)="submitForm()"
+          [disabled]="loading">
 
-      </button>
+          <span *ngIf="!loading">
+            Generar idees de TFG
+          </span>
 
-    </form>
+          <span *ngIf="loading" class="loading-btn">
+            <span class="mini-spinner"></span>
+            Generant...
+          </span>
 
+        </button>
+      </form>
+    </div>
   </div>
-
 </div>

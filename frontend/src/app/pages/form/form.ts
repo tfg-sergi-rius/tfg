@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { NgIf } from '@angular/common';
+import { Location, NgIf } from '@angular/common';
+import { take } from 'rxjs';
+import {
+  RecommendationRequest,
+  RecommendationService,
+} from '../../services/recommendation.service';
 
 @Component({
   selector: 'app-form',
@@ -13,7 +17,11 @@ import { NgIf } from '@angular/common';
 })
 export class Form {
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private location: Location,
+    private recommendationService: RecommendationService,
+    private router: Router
+  ) {}
 
   loading = false;
 
@@ -25,11 +33,15 @@ export class Form {
     interes: ''
   };
 
+  goBack() {
+    this.location.back();
+  }
+
   submitForm() {
 
     this.loading = true;
 
-    const body = {
+    const body: RecommendationRequest = {
       carrera: this.formData.carrera,
       area: this.formData.area,
       tecnologias: this.formData.tecnologias.split(','),
@@ -37,7 +49,8 @@ export class Form {
       interes: this.formData.interes
     };
 
-    this.http.post<any>('http://127.0.0.1:8000/recommend', body)
+    this.recommendationService.createRecommendation(body)
+      .pipe(take(1))
       .subscribe(res => {
 
         const id = res.id;

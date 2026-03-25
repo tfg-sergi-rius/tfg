@@ -1,8 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { NgFor, NgIf } from '@angular/common';
+import { Location, NgFor, NgIf } from '@angular/common';
 import { NgbCarousel, NgbSlide } from '@ng-bootstrap/ng-bootstrap/carousel';
+import { take } from 'rxjs';
+import {
+  RecommendationItem,
+  RecommendationService,
+} from '../../services/recommendation.service';
 
 @Component({
   selector: 'app-results',
@@ -12,36 +16,62 @@ import { NgbCarousel, NgbSlide } from '@ng-bootstrap/ng-bootstrap/carousel';
   styleUrl: './results.css'
 })
 export class Results implements OnInit {
-
-  ideas: any[] = [];
+  ideas: RecommendationItem[] = [];
+  readonly stars = [1, 2, 3, 4, 5];
   loading = true;
+  rating = 0;
+  savingRating = false;
+  private recommendationId = '';
 
   constructor(
+    private location: Location,
     private route: ActivatedRoute,
-    private http: HttpClient,
+    private recommendationService: RecommendationService,
     private cdr: ChangeDetectorRef
   ) {}
 
+  goBack() {
+    this.location.back();
+  }
+
   ngOnInit() {
-
     const id = this.route.snapshot.paramMap.get('id');
+    this.recommendationId = id ?? '';
 
-    this.http.get<any>(`http://127.0.0.1:8000/recommendation/${id}`)
+    this.recommendationService.getRecommendationById(this.recommendationId)
+      .pipe(take(1))
       .subscribe(res => {
-
-        console.log("Respuesta backend:", res);
-
-        if (res.status === "done") {
-          this.ideas = res.data;
+        if (res.status === 'done') {
+          this.ideas = res.data ?? [];
+          this.rating = res.rating ?? 0;
         }
 
         this.loading = false;
-
-        // 👇 fuerza actualización del template
         this.cdr.detectChanges();
-
       });
-
   }
 
+  setRating(star: number) {
+    if (!this.recommendationId || this.savingRating) {
+      return;
+    }
+
+    this.rating = star;
+    this.savingRating = true;
+
+    this.recommendationService.updateRecommendationRating(this.recommendationId, star)
+      .pipe(take(1))
+      .subscribe({
+        next: (response) => {
+          this.rating = response.rating;
+          this.savingRating = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error(error);
+          this.savingRating = false;
+          this.cdr.detectChanges();
+        },
+      });
+  }
 }
