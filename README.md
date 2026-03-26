@@ -14,7 +14,7 @@ Aplicacion con frontend en Angular y backend en FastAPI para generar ideas de TF
 ```env
 OPENAI_API_KEY=tu_clave_real
 ```
-Set-Content -Path .env -Value "OPENAI_API_KEY=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"
+Set-Content -Path .env -Value "OPENAI_API_KEY="
 2. Levanta los servicios:
 
 ```bash
