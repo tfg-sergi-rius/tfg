@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location, NgFor, NgIf } from '@angular/common';
 import { NgbCarousel, NgbSlide } from '@ng-bootstrap/ng-bootstrap/carousel';
 import { take } from 'rxjs';
 import {
+  ElaborateResponse,
   RecommendationItem,
   RecommendationService,
 } from '../../services/recommendation.service';
@@ -23,15 +24,24 @@ export class Results implements OnInit {
   savingRating = false;
   private recommendationId = '';
 
+  elaborating = false;
+  elaboration: ElaborateResponse | null = null;
+  elaboratedIndex: number | null = null;
+
   constructor(
     private location: Location,
     private route: ActivatedRoute,
+    private router: Router,
     private recommendationService: RecommendationService,
     private cdr: ChangeDetectorRef
   ) {}
 
   goBack() {
     this.location.back();
+  }
+
+  goToForm() {
+    this.router.navigate(['/form']);
   }
 
   ngOnInit() {
@@ -51,10 +61,32 @@ export class Results implements OnInit {
       });
   }
 
+  elaborate(index: number) {
+    if (this.elaborating) return;
+
+    this.elaborating = true;
+    this.elaboration = null;
+    this.elaboratedIndex = index;
+    this.cdr.detectChanges();
+
+    this.recommendationService.elaborate(this.recommendationId, index)
+      .pipe(take(1))
+      .subscribe({
+        next: (res) => {
+          this.elaboration = res;
+          this.elaborating = false;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error(err);
+          this.elaborating = false;
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
   setRating(star: number) {
-    if (!this.recommendationId || this.savingRating) {
-      return;
-    }
+    if (!this.recommendationId || this.savingRating) return;
 
     this.rating = star;
     this.savingRating = true;

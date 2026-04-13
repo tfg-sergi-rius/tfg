@@ -125,6 +125,10 @@ body {
 }
 
 .nav-start-btn {
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  text-decoration: none;
   justify-self: end;
   display: inline-flex;
   align-items: center;

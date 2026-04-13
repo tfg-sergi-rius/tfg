@@ -12,7 +12,11 @@
       <a routerLink="/contact">Contact</a>
     </div>
 
-    <a class="nav-start-btn" routerLink="/form">Start</a>
+    @if (authService.isLoggedIn()) {
+      <button class="nav-start-btn" (click)="authService.logOut()">Logout</button>
+    } @else {
+      <a class="nav-start-btn" routerLink="/login">Login</a>
+    }
   </nav>
 
   <div class="hero-content">

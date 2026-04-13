@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { NgFor } from '@angular/common';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter, Subscription, take } from 'rxjs';
 import { RecommendationService } from '../../services/recommendation.service';
+import { AuthService } from '../../auth/auth.service';
 
 interface HomeStat {
   value: string;
@@ -37,6 +38,8 @@ export class Home implements OnInit {
       description: 'Puntuacio mitjana de les valoracions deixades pels usuaris.',
     },
   ];
+
+  readonly authService = inject(AuthService);
 
   constructor(
     private recommendationService: RecommendationService,

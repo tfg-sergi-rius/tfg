@@ -2,12 +2,27 @@ from pydantic import BaseModel
 from typing import List
 
 
+class QuestionsRequest(BaseModel):
+    career: str
+
+
+class Question(BaseModel):
+    id: str
+    question: str
+
+
+class QuestionsResponse(BaseModel):
+    questions: List[Question]
+
+
+class QAPair(BaseModel):
+    question: str
+    answer: str
+
+
 class RecommendationRequest(BaseModel):
-    carrera: str
-    area: str
-    tecnologias: List[str]
-    dificultad: str
-    interes: str
+    career: str
+    qa_pairs: List[QAPair]
 
 
 class RecommendationItem(BaseModel):
@@ -30,6 +45,13 @@ class StoredRecommendation(BaseModel):
     id: str
     data: List[RecommendationItem]
     rating: int | None = None
+
+
+class ElaborateResponse(BaseModel):
+    summary: str
+    phases: List[str]
+    challenges: List[str]
+    resources: List[str]
 
 
 class RecommendationRatingRequest(BaseModel):

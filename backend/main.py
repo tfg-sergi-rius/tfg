@@ -9,6 +9,7 @@ load_dotenv(env_path)
 
 from backend.routes.recommendation import router as recommendation_router
 from backend.database import create_db_and_tables
+from backend.auth import init_firebase
 
 app = FastAPI()
 
@@ -28,4 +29,5 @@ def root():
 
 @app.on_event("startup")
 def on_startup():
+    init_firebase()
     create_db_and_tables()

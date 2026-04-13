@@ -3,123 +3,116 @@
   <div class="form-glow form-glow-two"></div>
   <div class="form-grid"></div>
 
-  <button
-    type="button"
-    class="back-btn"
-    (click)="goBack()">
+  <button type="button" class="back-btn" (click)="goBack()">
     <span class="material-symbols-outlined">arrow_back</span>
     Tornar
   </button>
 
   <div class="form-layout">
-    <section class="form-intro">
-      <span class="form-kicker">Brief creatiu del teu projecte</span>
-      <h1>Troba el teu <span>TFG ideal</span></h1>
 
-      <p class="intro-copy">
-        Respon unes quantes preguntes i convertirem els teus interessos en
-        propostes de TFG clares, viables i alineades amb el teu perfil.
-      </p>
-
-      <div class="intro-panel">
-        <span class="intro-panel-label">Que tindras al final</span>
-        <ul class="intro-list">
-          <li>Idees de TFG amb enfocament concret.</li>
-          <li>Tecnologies i tematiques alineades amb el teu perfil.</li>
-          <li>Propostes pensades per passar de bloqueig a direccio.</li>
-        </ul>
-      </div>
-    </section>
-
-    <div class="form-container">
-      <div class="form-header">
-        <span class="form-chip">Formulari</span>
-        <p>
-          Omple aquest briefing i et proposarem idees que tinguin sentit
-          per al teu context academic i tecnologic.
+    <!-- STEP 1: Carrera -->
+    @if (step === 1) {
+      <section class="form-intro">
+        <span class="form-kicker">Brief creatiu del teu projecte</span>
+        <h1>Troba el teu <span>TFG ideal</span></h1>
+        <p class="intro-copy">
+          Comença dient-nos quina carrera estàs estudiant i et farem
+          les preguntes adequades per trobar el TFG perfecte per a tu.
         </p>
-      </div>
+        <div class="intro-panel">
+          <span class="intro-panel-label">Que tindras al final</span>
+          <ul class="intro-list">
+            <li>Idees de TFG amb enfocament concret.</li>
+            <li>Tecnologies i temàtiques alineades amb el teu perfil.</li>
+            <li>Propostes pensades per passar de bloqueig a direcció.</li>
+          </ul>
+        </div>
+      </section>
 
-      <form>
-        <div class="form-grid-fields">
-          <div class="form-column">
-            <div class="form-group">
-              <label for="carrera">Carrera</label>
-              <input
-                id="carrera"
-                type="text"
-                [(ngModel)]="formData.carrera"
-                name="carrera"
-                placeholder="Ex: Informatica">
-            </div>
-
-            <div class="form-group">
-              <label for="area">Area que t'interessa</label>
-              <input
-                id="area"
-                type="text"
-                [(ngModel)]="formData.area"
-                name="area"
-                placeholder="Ex: Matematiques, programacio...">
-            </div>
-
-            <div class="form-group">
-              <label for="tecnologias">Tecnologies preferides</label>
-              <input
-                id="tecnologias"
-                type="text"
-                [(ngModel)]="formData.tecnologias"
-                name="tecnologias"
-                placeholder="Angular, Python, etc">
-            </div>
-          </div>
-
-          <div class="form-column">
-            <div class="form-group">
-              <label for="dificultad">Dificultat desitjada</label>
-              <select
-                id="dificultad"
-                [(ngModel)]="formData.dificultad"
-                name="dificultad">
-
-                <option value="">Selecciona una opcio</option>
-                <option value="baixa">Baixa</option>
-                <option value="mitjana">Mitjana</option>
-                <option value="alta">Alta</option>
-
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="interes">Interes principal</label>
-              <input
-                id="interes"
-                type="text"
-                [(ngModel)]="formData.interes"
-                name="interes"
-                placeholder="IA, dades, aplicacions...">
-            </div>
-          </div>
+      <div class="form-container">
+        <div class="form-header">
+          <span class="form-chip">Pas 1 de 2</span>
+          <p>Digues-nos quina carrera estàs estudiant per personalitzar les preguntes.</p>
         </div>
 
+        <form>
+          <div class="form-group career-group">
+            <label for="career">Quina carrera estudies?</label>
+            <input
+              id="career"
+              type="text"
+              [(ngModel)]="career"
+              name="career"
+              placeholder="Ex: Enginyeria Informàtica, ADE, Medicina...">
+          </div>
 
-        <button
-          type="button"
-          class="submit-btn"
-          (click)="submitForm()"
-          [disabled]="loading">
+          <button
+            type="button"
+            class="submit-btn"
+            (click)="submitCareer()"
+            [disabled]="loading || !career.trim()">
+            @if (!loading) {
+              Continua
+            } @else {
+              <span class="loading-btn">
+                <span class="mini-spinner"></span>
+                Generant preguntes...
+              </span>
+            }
+          </button>
+        </form>
+      </div>
+    }
 
-          <span *ngIf="!loading">
-            Generar idees de TFG
-          </span>
+    <!-- STEP 2: Preguntes dinàmiques -->
+    @if (step === 2) {
+      <section class="form-intro">
+        <span class="form-kicker">Brief creatiu del teu projecte</span>
+        <h1>Explica'ns <span>més sobre tu</span></h1>
+        <p class="intro-copy">
+          Respon aquestes preguntes perquè puguem generar les millors
+          propostes de TFG adaptades al teu perfil de <strong>{{ career }}</strong>.
+        </p>
+      </section>
 
-          <span *ngIf="loading" class="loading-btn">
-            <span class="mini-spinner"></span>
-            Generant...
-          </span>
+      <div class="form-container">
+        <div class="form-header">
+          <span class="form-chip">Pas 2 de 2</span>
+          <p>Respon les preguntes i et proposarem 5 idees de TFG personalitzades.</p>
+        </div>
 
-        </button>
-      </form>
-    </div>
+        <form>
+          <div class="form-grid-fields">
+            @for (question of questions; track question.id; let i = $index) {
+              <div class="form-group">
+                <label [for]="question.id">{{ question.question }}</label>
+                <input
+                  [id]="question.id"
+                  type="text"
+                  [(ngModel)]="answers[i]"
+                  [name]="question.id"
+                  placeholder="La teva resposta...">
+              </div>
+            }
+          </div>
+
+          <button
+            type="button"
+            class="submit-btn"
+            (click)="submitAnswers()"
+            [disabled]="loading">
+            @if (!loading) {
+              Generar idees de TFG
+            } @else {
+              <span class="loading-btn">
+                <span class="mini-spinner"></span>
+                Generant...
+              </span>
+            }
+          </button>
+        </form>
+      </div>
+    }
+
   </div>
 </div>

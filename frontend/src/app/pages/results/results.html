@@ -3,10 +3,7 @@
   <div class="results-glow results-glow-two"></div>
   <div class="results-grid"></div>
 
-  <button
-    type="button"
-    class="back-btn"
-    (click)="goBack()">
+  <button type="button" class="back-btn" (click)="goBack()">
     <span class="material-symbols-outlined">arrow_back</span>
     Tornar
   </button>
@@ -15,8 +12,8 @@
     <div class="results-header">
       <h1 class="title">Idees de TFG generades</h1>
       <p class="results-intro">
-        Aquestes son les propostes que encaixen amb les respostes del teu
-        briefing. Navega entre elles i queda't amb la que tingui mes potencial.
+        Aquestes son les propostes que encaixen amb les respostes del teu briefing.
+        Navega entre elles i queda't amb la que tingui mes potencial.
       </p>
     </div>
 
@@ -29,26 +26,64 @@
       <ng-template ngbSlide *ngFor="let idea of ideas; let index = index">
         <div class="idea-card">
           <div class="idea-meta">
-            <span class="idea-badge">Propuesta {{ index + 1 }}</span>
+            <span class="idea-badge">Proposta {{ index + 1 }}</span>
           </div>
 
-          <h2 class="idea-title">
-            {{ idea.title }}
-          </h2>
-
-          <p class="idea-description">
-            {{ idea.description }}
-          </p>
+          <h2 class="idea-title">{{ idea.title }}</h2>
+          <p class="idea-description">{{ idea.description }}</p>
 
           <div class="tech-list">
-            <span class="tech" *ngFor="let tech of idea.technologies">
-              {{ tech }}
-            </span>
+            <span class="tech" *ngFor="let tech of idea.technologies">{{ tech }}</span>
           </div>
+
+          <button class="elaborate-btn" (click)="elaborate(index)" [disabled]="elaborating">
+            @if (elaborating && elaboratedIndex === index) {
+              <span class="mini-spinner"></span> Desglosant...
+            } @else {
+              Desglossa aquest TFG
+            }
+          </button>
         </div>
       </ng-template>
     </ngb-carousel>
 
+    <!-- Elaboració d'un TFG -->
+    @if (elaboration) {
+      <div class="elaboration-panel">
+        <h3 class="elaboration-title">Desglosament detallat</h3>
+
+        <p class="elaboration-summary">{{ elaboration.summary }}</p>
+
+        <div class="elaboration-section">
+          <h4>Fases del projecte</h4>
+          <ol>
+            @for (phase of elaboration.phases; track phase) {
+              <li>{{ phase }}</li>
+            }
+          </ol>
+        </div>
+
+        <div class="elaboration-section">
+          <h4>Reptes principals</h4>
+          <ul>
+            @for (challenge of elaboration.challenges; track challenge) {
+              <li>{{ challenge }}</li>
+            }
+          </ul>
+        </div>
+
+        <div class="elaboration-section">
+          <h4>Recursos i tecnologies clau</h4>
+          <div class="tech-list">
+            @for (resource of elaboration.resources; track resource) {
+              <span class="tech">{{ resource }}</span>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Rating -->
     <div *ngIf="!loading && ideas.length > 0" class="rating-panel">
       <span class="rating-kicker">Valora aquestes idees</span>
       <h2>Quina puntuacio els dones?</h2>
@@ -68,11 +103,17 @@
       </p>
     </div>
 
+    <!-- Accions -->
+    <div *ngIf="!loading && ideas.length > 0" class="actions-panel">
+      <button class="more-questions-btn" (click)="goToForm()">
+        Vull més preguntes
+      </button>
+    </div>
+
     <div *ngIf="!loading && ideas.length === 0" class="empty-state">
       <span class="empty-kicker">Sense resultats</span>
       <h2>No hem trobat idees per mostrar.</h2>
       <p>Torna al formulari, ajusta les respostes i genera una nova proposta.</p>
     </div>
   </div>
-
 </div>

@@ -1,3 +1,9 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+database.db
+
 # Logs
 logs
 *.log
@@ -118,6 +124,10 @@ dist
 
 # Firebase cache directory
 .firebase/
+
+# Firebase service account keys (never commit these)
+*firebase-adminsdk*.json
+serviceAccountKey.json
 
 # TernJS port file
 .tern-port
