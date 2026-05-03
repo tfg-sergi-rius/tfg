@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  API: 'http://127.0.0.1:8000',
+  API: 'https://tfg-recommender-backend.fly.dev',
   firebase: {
     apiKey: 'AIzaSyDqjjiXbcutMQMsaLpy-z5U69wE1y-Uk2E',
     authDomain: 'stfg-d19e7.firebaseapp.com',

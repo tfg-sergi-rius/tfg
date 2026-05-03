@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 
 env_path = Path(__file__).resolve().parent.parent / ".env.development"
-load_dotenv(env_path)
+load_dotenv(env_path, override=False)
 
 from backend.routes.recommendation import router as recommendation_router
 from backend.database import create_db_and_tables
