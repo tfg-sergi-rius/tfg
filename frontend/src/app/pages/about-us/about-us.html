@@ -4,22 +4,18 @@
     class="back-btn"
     (click)="goBack()">
     <span class="material-symbols-outlined">arrow_back</span>
-    Tornar
+    {{ 'common.back' | translate }}
   </button>
 
   <div class="info-shell">
-    <span class="info-kicker">About us</span>
-    <h1>Una eina per convertir interessos dispersos en propostes de TFG clares.</h1>
+    <span class="info-kicker">{{ 'about.kicker' | translate }}</span>
+    <h1>{{ 'about.title' | translate }}</h1>
     <p>
-      TFG Finder combina un formulari guiat amb generacio assistida per IA
-      per ajudar estudiants a descobrir idees viables, originals i alineades
-      amb el seu perfil academic i tecnologic.
+      {{ 'about.p1' | translate }}
     </p>
     <p>
-      L'objectiu de la plataforma es reduir el temps inicial de bloqueig quan
-      toca escollir tema i transformar preferencies personals en opcions
-      concretes que es puguin convertir en un projecte final realista.
+      {{ 'about.p2' | translate }}
     </p>
-    <a class="primary-link" routerLink="/form">Comencar amb el formulari</a>
+    <a class="primary-link" routerLink="/form">{{ 'about.cta' | translate }}</a>
   </div>
 </div>

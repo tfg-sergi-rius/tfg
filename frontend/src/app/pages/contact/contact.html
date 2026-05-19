@@ -4,19 +4,18 @@
     class="back-btn"
     (click)="goBack()">
     <span class="material-symbols-outlined">arrow_back</span>
-    Tornar
+    {{ 'common.back' | translate }}
   </button>
 
   <div class="info-shell">
-    <span class="info-kicker">Contact</span>
-    <h1>Vols comentar una millora o proposar una funcionalitat nova?</h1>
+    <span class="info-kicker">{{ 'contact.kicker' | translate }}</span>
+    <h1>{{ 'contact.title' | translate }}</h1>
     <p>
-      Aquesta pagina pot servir com a punt de contacte del projecte per afegir
-      correu, perfil de GitHub,o cualsevol altre correu decicat unicament al fi de aquesta paguina.
+      {{ 'contact.p1' | translate }}
     </p>
     <p>
-      Es pot ficar un forum tambe on escriguin millores de la app y es guardin o quedin visibles.
+      {{ 'contact.p2' | translate }}
     </p>
-    <a class="primary-link" routerLink="/">Tornar a la home</a>
+    <a class="primary-link" routerLink="/">{{ 'contact.home' | translate }}</a>
   </div>
 </div>

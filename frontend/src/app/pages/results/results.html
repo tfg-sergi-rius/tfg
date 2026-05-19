@@ -5,20 +5,19 @@
 
   <button type="button" class="back-btn" (click)="goBack()">
     <span class="material-symbols-outlined">arrow_back</span>
-    Tornar
+    {{ 'common.back' | translate }}
   </button>
 
   <div class="results-shell">
     <div class="results-header">
-      <h1 class="title">Idees de TFG generades</h1>
+      <h1 class="title">{{ 'results.title' | translate }}</h1>
       <p class="results-intro">
-        Aquestes son les propostes que encaixen amb les respostes del teu briefing.
-        Navega entre elles i queda't amb la que tingui mes potencial.
+        {{ 'results.intro' | translate }}
       </p>
     </div>
 
     <div *ngIf="loading" class="loading">
-      <p>Generant idees amb IA...</p>
+      <p>{{ 'results.loading' | translate }}</p>
       <div class="spinner"></div>
     </div>
 
@@ -26,7 +25,7 @@
       <ng-template ngbSlide *ngFor="let idea of ideas; let index = index">
         <div class="idea-card">
           <div class="idea-meta">
-            <span class="idea-badge">Proposta {{ index + 1 }}</span>
+            <span class="idea-badge">{{ 'results.proposal' | translate }} {{ index + 1 }}</span>
           </div>
 
           <h2 class="idea-title">{{ idea.title }}</h2>
@@ -38,9 +37,9 @@
 
           <button class="elaborate-btn" (click)="elaborate(index)" [disabled]="elaborating">
             @if (elaborating && elaboratedIndex === index) {
-              <span class="mini-spinner"></span> Desglosant...
+              <span class="mini-spinner"></span> {{ 'results.elaborating' | translate }}
             } @else {
-              Desglossa aquest TFG
+              {{ 'results.elaborateBtn' | translate }}
             }
           </button>
         </div>
@@ -50,12 +49,12 @@
     <!-- Elaboració d'un TFG -->
     @if (elaboration) {
       <div class="elaboration-panel">
-        <h3 class="elaboration-title">Desglosament detallat</h3>
+        <h3 class="elaboration-title">{{ 'results.elaborationTitle' | translate }}</h3>
 
         <p class="elaboration-summary">{{ elaboration.summary }}</p>
 
         <div class="elaboration-section">
-          <h4>Fases del projecte</h4>
+          <h4>{{ 'results.phases' | translate }}</h4>
           <ol>
             @for (phase of elaboration.phases; track phase) {
               <li>{{ phase }}</li>
@@ -64,7 +63,7 @@
         </div>
 
         <div class="elaboration-section">
-          <h4>Reptes principals</h4>
+          <h4>{{ 'results.challenges' | translate }}</h4>
           <ul>
             @for (challenge of elaboration.challenges; track challenge) {
               <li>{{ challenge }}</li>
@@ -73,7 +72,7 @@
         </div>
 
         <div class="elaboration-section">
-          <h4>Recursos i tecnologies clau</h4>
+          <h4>{{ 'results.resources' | translate }}</h4>
           <div class="tech-list">
             @for (resource of elaboration.resources; track resource) {
               <span class="tech">{{ resource }}</span>
@@ -85,8 +84,8 @@
 
     <!-- Rating -->
     <div *ngIf="!loading && ideas.length > 0" class="rating-panel">
-      <span class="rating-kicker">Valora aquestes idees</span>
-      <h2>Quina puntuacio els dones?</h2>
+      <span class="rating-kicker">{{ 'results.ratingKicker' | translate }}</span>
+      <h2>{{ 'results.ratingTitle' | translate }}</h2>
       <div class="rating-stars">
         <button
           *ngFor="let star of stars"
@@ -99,21 +98,21 @@
         </button>
       </div>
       <p class="rating-note">
-        {{ rating > 0 ? 'Valoracio guardada: ' + rating + '/5' : 'Encara no has valorat aquestes idees.' }}
+        {{ rating > 0 ? (('results.ratingSaved' | translate) + ' ' + rating + '/5') : ('results.ratingNone' | translate) }}
       </p>
     </div>
 
     <!-- Accions -->
     <div *ngIf="!loading && ideas.length > 0" class="actions-panel">
       <button class="more-questions-btn" (click)="goToForm()">
-        Vull més preguntes
+        {{ 'results.moreQuestions' | translate }}
       </button>
     </div>
 
     <div *ngIf="!loading && ideas.length === 0" class="empty-state">
-      <span class="empty-kicker">Sense resultats</span>
-      <h2>No hem trobat idees per mostrar.</h2>
-      <p>Torna al formulari, ajusta les respostes i genera una nova proposta.</p>
+      <span class="empty-kicker">{{ 'results.emptyKicker' | translate }}</span>
+      <h2>{{ 'results.emptyTitle' | translate }}</h2>
+      <p>{{ 'results.emptyText' | translate }}</p>
     </div>
   </div>
 </div>

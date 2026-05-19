@@ -8,11 +8,12 @@ import {
   RecommendationItem,
   RecommendationService,
 } from '../../services/recommendation.service';
+import { TranslatePipe } from '../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-results',
   standalone: true,
-  imports: [NgFor, NgIf, NgbCarousel, NgbSlide],
+  imports: [NgFor, NgIf, NgbCarousel, NgbSlide, TranslatePipe],
   templateUrl: './results.html',
   styleUrl: './results.css'
 })

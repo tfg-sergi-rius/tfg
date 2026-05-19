@@ -5,7 +5,7 @@
 
   <button type="button" class="back-btn" (click)="goBack()">
     <span class="material-symbols-outlined">arrow_back</span>
-    Tornar
+    {{ 'common.back' | translate }}
   </button>
 
   <div class="form-layout">
@@ -13,37 +13,36 @@
     <!-- STEP 1: Carrera -->
     @if (step === 1) {
       <section class="form-intro">
-        <span class="form-kicker">Brief creatiu del teu projecte</span>
-        <h1>Troba el teu <span>TFG ideal</span></h1>
+        <span class="form-kicker">{{ 'form.kicker' | translate }}</span>
+        <h1>{{ 'form.step1.title1' | translate }} <span>{{ 'form.step1.title2' | translate }}</span></h1>
         <p class="intro-copy">
-          Comença dient-nos quina carrera estàs estudiant i et farem
-          les preguntes adequades per trobar el TFG perfecte per a tu.
+          {{ 'form.step1.intro' | translate }}
         </p>
         <div class="intro-panel">
-          <span class="intro-panel-label">Que tindras al final</span>
+          <span class="intro-panel-label">{{ 'form.step1.panelLabel' | translate }}</span>
           <ul class="intro-list">
-            <li>Idees de TFG amb enfocament concret.</li>
-            <li>Tecnologies i temàtiques alineades amb el teu perfil.</li>
-            <li>Propostes pensades per passar de bloqueig a direcció.</li>
+            <li>{{ 'form.step1.benefit1' | translate }}</li>
+            <li>{{ 'form.step1.benefit2' | translate }}</li>
+            <li>{{ 'form.step1.benefit3' | translate }}</li>
           </ul>
         </div>
       </section>
 
       <div class="form-container">
         <div class="form-header">
-          <span class="form-chip">Pas 1 de 2</span>
-          <p>Digues-nos quina carrera estàs estudiant per personalitzar les preguntes.</p>
+          <span class="form-chip">{{ 'form.step1.chip' | translate }}</span>
+          <p>{{ 'form.step1.headerText' | translate }}</p>
         </div>
 
         <form>
           <div class="form-group career-group">
-            <label for="career">Quina carrera estudies?</label>
+            <label for="career">{{ 'form.step1.careerLabel' | translate }}</label>
             <input
               id="career"
               type="text"
               [(ngModel)]="career"
               name="career"
-              placeholder="Ex: Enginyeria Informàtica, ADE, Medicina...">
+              [placeholder]="'form.step1.careerPlaceholder' | translate">
           </div>
 
           <button
@@ -52,11 +51,11 @@
             (click)="submitCareer()"
             [disabled]="loading || !career.trim()">
             @if (!loading) {
-              Continua
+              {{ 'form.step1.submit' | translate }}
             } @else {
               <span class="loading-btn">
                 <span class="mini-spinner"></span>
-                Generant preguntes...
+                {{ 'form.step1.loading' | translate }}
               </span>
             }
           </button>
@@ -67,18 +66,17 @@
     <!-- STEP 2: Preguntes dinàmiques -->
     @if (step === 2) {
       <section class="form-intro">
-        <span class="form-kicker">Brief creatiu del teu projecte</span>
-        <h1>Explica'ns <span>més sobre tu</span></h1>
+        <span class="form-kicker">{{ 'form.kicker' | translate }}</span>
+        <h1>{{ 'form.step2.title1' | translate }} <span>{{ 'form.step2.title2' | translate }}</span></h1>
         <p class="intro-copy">
-          Respon aquestes preguntes perquè puguem generar les millors
-          propostes de TFG adaptades al teu perfil de <strong>{{ career }}</strong>.
+          {{ 'form.step2.intro' | translate }} <strong>{{ career }}</strong>.
         </p>
       </section>
 
       <div class="form-container">
         <div class="form-header">
-          <span class="form-chip">Pas 2 de 2</span>
-          <p>Respon les preguntes i et proposarem 5 idees de TFG personalitzades.</p>
+          <span class="form-chip">{{ 'form.step2.chip' | translate }}</span>
+          <p>{{ 'form.step2.headerText' | translate }}</p>
         </div>
 
         <form>
@@ -91,7 +89,7 @@
                   type="text"
                   [(ngModel)]="answers[i]"
                   [name]="question.id"
-                  placeholder="La teva resposta...">
+                  [placeholder]="'form.step2.answerPlaceholder' | translate">
               </div>
             }
           </div>
@@ -102,11 +100,11 @@
             (click)="submitAnswers()"
             [disabled]="loading">
             @if (!loading) {
-              Generar idees de TFG
+              {{ 'form.step2.submit' | translate }}
             } @else {
               <span class="loading-btn">
                 <span class="mini-spinner"></span>
-                Generant...
+                {{ 'form.step2.loading' | translate }}
               </span>
             }
           </button>

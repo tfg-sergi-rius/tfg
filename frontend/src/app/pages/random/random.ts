@@ -5,11 +5,12 @@ import {
   RecommendationItem,
   RecommendationService,
 } from '../../services/recommendation.service';
+import { TranslatePipe } from '../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-random',
   standalone: true,
-  imports: [NgFor, NgIf],
+  imports: [NgFor, NgIf, TranslatePipe],
   templateUrl: './random.html',
   styleUrl: './random.css'
 })

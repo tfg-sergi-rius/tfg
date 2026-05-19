@@ -4,13 +4,13 @@
     class="back-btn"
     (click)="goBack()">
     <span class="material-symbols-outlined">arrow_back</span>
-    Tornar
+    {{ 'common.back' | translate }}
   </button>
 
-  <h1 class="title">TFG aleatori</h1>
+  <h1 class="title">{{ 'random.title' | translate }}</h1>
 
   <div *ngIf="loading" class="loading">
-    <p>Generant una idea sorpresa...</p>
+    <p>{{ 'random.loading' | translate }}</p>
     <div class="spinner"></div>
   </div>
 

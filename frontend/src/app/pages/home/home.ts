@@ -4,6 +4,7 @@ import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter, Subscription, take } from 'rxjs';
 import { RecommendationService } from '../../services/recommendation.service';
 import { AuthService } from '../../auth/auth.service';
+import { TranslatePipe } from '../../i18n/translate.pipe';
 
 interface HomeStat {
   value: string;
@@ -14,7 +15,7 @@ interface HomeStat {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, NgFor],
+  imports: [RouterLink, NgFor, TranslatePipe],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -24,18 +25,18 @@ export class Home implements OnInit {
   stats: HomeStat[] = [
     {
       value: '0',
-      title: 'Consultes totals',
-      description: 'Sollicituds de recomanacio registrades des de la creacio de l aplicacio.',
+      title: 'home.stat.requests.title',
+      description: 'home.stat.requests.desc',
     },
     {
       value: '0',
-      title: 'Idees generades',
-      description: 'Nombre total de propostes de TFG guardades fins ara.',
+      title: 'home.stat.ideas.title',
+      description: 'home.stat.ideas.desc',
     },
     {
       value: '0',
-      title: 'Mitjana de valoracions',
-      description: 'Puntuacio mitjana de les valoracions deixades pels usuaris.',
+      title: 'home.stat.rating.title',
+      description: 'home.stat.rating.desc',
     },
   ];
 
@@ -89,18 +90,18 @@ export class Home implements OnInit {
           this.stats = [
             {
               value: `${totalRequests}`,
-              title: 'Consultes totals',
-              description: 'Sollicituds de recomanacio registrades des de la creacio de l aplicacio.',
+              title: 'home.stat.requests.title',
+              description: 'home.stat.requests.desc',
             },
             {
               value: `${totalIdeas}`,
-              title: 'Idees generades',
-              description: 'Nombre total de propostes de TFG guardades fins ara.',
+              title: 'home.stat.ideas.title',
+              description: 'home.stat.ideas.desc',
             },
             {
               value: averageRating,
-              title: 'Mitjana de valoracions',
-              description: 'Puntuacio mitjana de les valoracions deixades pels usuaris.',
+              title: 'home.stat.rating.title',
+              description: 'home.stat.rating.desc',
             },
           ];
           this.cdr.detectChanges();

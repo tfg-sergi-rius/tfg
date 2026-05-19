@@ -8,11 +8,12 @@ import {
   QAPair,
   RecommendationService,
 } from '../../services/recommendation.service';
+import { TranslatePipe } from '../../i18n/translate.pipe';
 
 @Component({
   selector: 'app-form',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, TranslatePipe],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })

@@ -7,15 +7,15 @@
     <a class="logo" routerLink="/">TFG Finder</a>
 
     <div class="menu">
-      <a routerLink="/random">Get me a random TFG</a>
-      <a routerLink="/about-us">About us</a>
-      <a routerLink="/contact">Contact</a>
+      <a routerLink="/random">{{ 'nav.random' | translate }}</a>
+      <a routerLink="/about-us">{{ 'nav.about' | translate }}</a>
+      <a routerLink="/contact">{{ 'nav.contact' | translate }}</a>
     </div>
 
     @if (authService.isLoggedIn()) {
-      <button class="nav-start-btn" (click)="authService.logOut()">Logout</button>
+      <button class="nav-start-btn" (click)="authService.logOut()">{{ 'nav.logout' | translate }}</button>
     } @else {
-      <a class="nav-start-btn" routerLink="/login">Login</a>
+      <a class="nav-start-btn" routerLink="/login">{{ 'nav.login' | translate }}</a>
     }
   </nav>
 
@@ -24,33 +24,30 @@
     <div class="hero-left">
 
       <h1>
-        Descobreix <br>
-        <span>el teu TFG</span>
+        {{ 'home.hero.title1' | translate }} <br>
+        <span>{{ 'home.hero.title2' | translate }}</span>
       </h1>
 
       <p>
-        Respon a unes quantes preguntes sobre els teus interessos i
-        rep suggeriments personalitzats per al teu
-        projecte final de grau.
+        {{ 'home.hero.subtitle' | translate }}
       </p>
 
       <div class="hero-buttons">
 
         <button class="primary-btn" routerLink="/form">
-          Averigua quin TFG s'adapten millor a tu
+          {{ 'home.hero.ctaForm' | translate }}
         </button>
 
         <button class="secondary-btn" routerLink="/random">
-          Genera'm un TFG random
+          {{ 'home.hero.ctaRandom' | translate }}
         </button>
 
       </div>
 
       <div class="hero-note">
-        <span class="hero-note-label">Per a qui es</span>
+        <span class="hero-note-label">{{ 'home.hero.forwhoLabel' | translate }}</span>
         <p>
-          Pensat per estudiants que volen passar de la indecisio inicial
-          a una proposta de projecte concreta, viable i atractiva.
+          {{ 'home.hero.forwhoText' | translate }}
         </p>
       </div>
 
@@ -59,13 +56,13 @@
     <div class="hero-right">
       <div class="stats-shell">
         <div class="stats-header">
-          <span class="stats-kicker">Activitat de la plataforma</span>
+          <span class="stats-kicker">{{ 'home.stats.kicker' | translate }}</span>
         </div>
 
         <div class="card stat-card" *ngFor="let stat of stats">
           <span class="stat-value">{{ stat.value }}</span>
-          <h2 class="stat-title">{{ stat.title }}</h2>
-          <p class="stat-description">{{ stat.description }}</p>
+          <h2 class="stat-title">{{ stat.title | translate }}</h2>
+          <p class="stat-description">{{ stat.description | translate }}</p>
         </div>
       </div>
 

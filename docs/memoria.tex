@@ -1,0 +1,454 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[catalan]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{pgfplots}
+\usepackage{parskip}
+\usepackage{cite}
+
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, fit, backgrounds, calc}
+\pgfplotsset{compat=1.18}
+
+\geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=2.5cm}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue!70!black,
+    citecolor=black
+}
+
+\lstdefinestyle{codestyle}{
+    backgroundcolor=\color{gray!8},
+    commentstyle=\color{green!50!black}\itshape,
+    keywordstyle=\color{blue!80!black}\bfseries,
+    stringstyle=\color{red!60!black},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    keepspaces=true,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    numbersep=8pt,
+    showstringspaces=false,
+    tabsize=2,
+    frame=single,
+    rulecolor=\color{gray!40},
+    xleftmargin=15pt
+}
+\lstset{style=codestyle}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small TFG Finder}
+\lhead{\small Sergi Rius}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% -------------------------------------------------
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\scshape\Large Treball de Fi de Grau\par}
+    \vspace{0.5cm}
+    \rule{\linewidth}{0.4pt}
+    \vspace{0.5cm}
+
+    {\Huge\bfseries TFG Finder\par}
+    \vspace{0.3cm}
+    {\Large Sistema de Recomanació de Treballs de Fi de Grau\\[0.3em]
+    mitjançant Intel·ligència Artificial\par}
+
+    \vspace{0.5cm}
+    \rule{\linewidth}{0.4pt}
+    \vspace{1.5cm}
+
+    {\large\textbf{Autor:} Sergi Rius\par}
+    \vfill
+    {\large 2026\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% =============================================
+\section{Introducció a la Intel·ligència Artificial i els LLMs}
+% =============================================
+
+La intel·ligència artificial (IA) ha experimentat una transformació radical en la darrera dècada gràcies al desenvolupament dels \textit{Large Language Models} (LLMs), models de llenguatge de gran escala capaços de comprendre i generar text amb una fluïdesa i coherència sense precedents. Aquests models, basats en l'arquitectura \textit{Transformer} introduïda per Vaswani et al.\ \cite{vaswani2017attention}, aprenen patrons estadístics a partir de grans corpus de text. Això els permet realitzar tasques de naturalesa molt diversa (traducció automàtica, generació de codi, resposta a preguntes o síntesi de documents) sense entrenament específic per a cada tasca concreta. El salt qualitatiu respecte als sistemes experts anteriors rau en la capacitat del model d'entendre el context i de generar respostes coherents a escala, cosa que obre la porta a aplicacions que fins ara eren inabastables.
+
+El model GPT (\textit{Generative Pre-trained Transformer}) d'OpenAI representa un dels avenços més significatius en aquest camp. A partir de GPT-3, publicat el 2020 amb 175.000 milions de paràmetres \cite{brown2020gpt3}, es va demostrar que l'escalat dels models comportava capacitats emergents imprevistes: raonament simbòlic, aritmètica bàsica i generació de codi funcional. La família GPT-4 i les seves variants posteriors han consolidat aquest paradigma, oferint API accessibles \cite{openai2024api} que permeten integrar capacitats de processament del llenguatge natural en qualsevol aplicació. En el present projecte s'utilitza el model \textbf{GPT-5.4} d'OpenAI per generar recomanacions personalitzades de TFG a partir del perfil de l'estudiant, aprofitant la seva capacitat per produir respostes estructurades en format JSON.
+
+L'ús de LLMs en aplicacions educatives obre noves possibilitats per a la personalització de l'aprenentatge. En lloc de consultar un catàleg estàtic de propostes, un sistema basat en LLMs pot generar recomanacions dinàmiques i adaptades als interessos, habilitats i motivacions de cada estudiant. Això és precisament l'objectiu del present Treball de Fi de Grau: construir una aplicació web que, a través d'un qüestionari interactiu, recopili informació sobre l'estudiant i generi, mitjançant l'API d'OpenAI, cinc propostes de TFG personalitzades amb títol, descripció i pila tecnològica recomanada. El resultat és un assistent d'orientació acadèmica disponible \textit{on-demand}, sense cost fix per a la institució i escalable en funció de la demanda.
+
+% =============================================
+\section{Arquitectura Client-Servidor}
+% =============================================
+
+El sistema té tres parts principals: el \textbf{frontend} fet amb Angular i el \textbf{backend} fet amb FastAPI. Tot està desplegat al núvol, de manera que funciona des de qualsevol lloc sense necessitat de cap servidor propi.
+
+\subsection{Visió general del sistema}
+
+L'aplicació segueix una arquitectura \textbf{client-servidor}, amb una separació estricta entre la interfície que s'executa al navegador i la lògica de negoci que resideix al servidor. El client és una \textit{Single Page Application}: un conjunt de fitxers estàtics (HTML, CSS i JavaScript) servits des de GitHub Pages que, un cop descarregats al navegador, s'executen íntegrament al costat de l'usuari sense dependre de cap servidor de pàgines. Tota la comunicació amb el servidor es fa mitjançant peticions HTTP a una API REST.
+
+El servidor, allotjat a Fly.io, centralitza la lògica de negoci, l'accés a la base de dades i la comunicació amb els serveis externs (Firebase i OpenAI). La figura~\ref{fig:arquitectura} en resumeix els components principals i les relacions.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    font=\small,
+    component/.style={rectangle, rounded corners, draw, thick, align=center,
+                      minimum height=1.4cm, minimum width=4.8cm},
+    service/.style={rectangle, rounded corners, draw, thick, align=center,
+                    minimum height=1.2cm, minimum width=3.1cm, fill=orange!12},
+    arr/.style={-{Stealth[length=2.6mm]}, semithick},
+]
+\node[component, fill=green!12] (spa) at (0,0)
+    {\textbf{Frontend}\\[2pt]\footnotesize Angular 21 (SPA)\\\footnotesize desplegat a GitHub Pages};
+\node[component, fill=blue!12] (backend) at (0,-4)
+    {\textbf{Backend}\\[2pt]\footnotesize API REST amb FastAPI (Python 3.13)\\\footnotesize allotjat a Fly.io};
+\node[service, fill=red!12] (fb) at (6.6,-2)
+    {\textbf{Firebase}\\\footnotesize Authentication};
+\node[service] (db) at (-2.7,-6.8)
+    {\textbf{SQLite}\\\footnotesize volum persistent};
+\node[service] (ai) at (2.7,-6.8)
+    {\textbf{OpenAI API}\\\footnotesize model GPT-5.4};
+
+\draw[arr] ([xshift=-10mm]spa.south) -- node[midway, left, align=right, font=\footnotesize]{peticions REST\\(token JWT a la capçalera)} ([xshift=-10mm]backend.north);
+\draw[arr] ([xshift=10mm]backend.north) -- node[midway, right, align=left, font=\footnotesize]{respostes\\(JSON)} ([xshift=10mm]spa.south);
+\draw[arr] ([yshift=2mm]spa.east) -- node[midway, above, sloped, font=\footnotesize]{login (OAuth2)} ([xshift=5mm]fb.north west);
+\draw[arr] ([yshift=3mm]fb.west) -- node[midway, below, sloped, font=\footnotesize]{token JWT} ([yshift=-5mm]spa.east);
+\draw[arr] ([yshift=4mm]backend.east) -- node[midway, above, sloped, font=\footnotesize]{verifica el token} ([yshift=3mm]fb.south west);
+\draw[arr] ([xshift=-10mm]fb.south) -- node[midway, below, sloped, font=\footnotesize]{token vàlid} ([yshift=-4mm]backend.east);
+\draw[arr] (backend.south) -- node[midway, above, sloped, font=\footnotesize]{accés SQL} (db.north);
+\draw[arr] (backend.south) -- node[midway, above, sloped, font=\footnotesize]{generació IA} (ai.north);
+\end{tikzpicture}
+\caption{Visió general de l'arquitectura client-servidor}
+\label{fig:arquitectura}
+\end{figure}
+
+\subsection{Frontend: Angular SPA}
+
+El frontend és una aplicació de pàgina única (\textit{Single Page Application}) desenvolupada amb \textbf{Angular 21} \cite{angular2024}. S'encarrega de:
+
+\begin{itemize}
+    \item Presentar la interfície d'usuari i gestionar la navegació entre rutes amb el router d'Angular.
+    \item Autenticar l'usuari via Firebase Authentication (login amb compte de Google).
+    \item Afegir el token JWT de l'usuari en la capçalera \texttt{Authorization} de cada petició protegida.
+    \item Mostrar el qüestionari interactiu i les recomanacions generades per la IA.
+\end{itemize}
+
+L'aplicació utilitza el fitxer \texttt{environment.production.ts} en compilació de producció, que configura la URL base de l'API apuntant al backend de Fly.io. Està desplegada a \textbf{GitHub Pages} i actualitzable amb una sola comanda:
+
+\begin{lstlisting}[language=bash]
+ng deploy --base-href=/tfg/
+\end{lstlisting}
+
+\subsection{Flux d'autenticació}
+
+El diagrama de seqüència de la figura~\ref{fig:auth-flux} mostra el flux complet d'autenticació: des de l'inici de sessió de l'usuari amb el seu compte de Google fins a la verificació del token JWT al backend abans de respondre una petició protegida.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    font=\footnotesize,
+    actor/.style={rectangle, rounded corners, draw, thick, align=center,
+                  minimum height=0.95cm, minimum width=2.5cm, fill=blue!8},
+    lifeline/.style={dashed, gray!70},
+    msg/.style={-{Stealth[length=2mm]}, semithick},
+    ret/.style={-{Stealth[length=2mm]}, semithick, dashed},
+    lbl/.style={above, font=\scriptsize, align=center},
+]
+\node[actor] (f)  at (0,0)  {\textbf{Frontend}\\\scriptsize Angular SPA};
+\node[actor] (fb) at (5,0)  {\textbf{Firebase}\\\scriptsize Authentication};
+\node[actor] (b)  at (10,0) {\textbf{Backend}\\\scriptsize FastAPI};
+
+\draw[lifeline] (0,-0.48)  -- (0,-7.9);
+\draw[lifeline] (5,-0.48)  -- (5,-7.9);
+\draw[lifeline] (10,-0.48) -- (10,-7.9);
+
+\draw[msg] (0,-1.5)  -- node[lbl]{1. Login amb Google (popup OAuth2)} (5,-1.5);
+\draw[ret] (5,-2.6)  -- node[lbl]{2. Retorna el JWT \texttt{id\_token}} (0,-2.6);
+\draw[msg] (0,-4.0)  -- node[lbl]{3. Petició REST\\\texttt{Authorization: Bearer <token>}} (10,-4.0);
+\draw[msg] (10,-5.2) -- node[lbl]{4. \texttt{verify\_id\_token()}} (5,-5.2);
+\draw[ret] (5,-6.3)  -- node[lbl]{5. Token vàlid (\texttt{uid}, \texttt{email})} (10,-6.3);
+\draw[ret] (10,-7.4) -- node[lbl]{6. Resposta \texttt{200 OK} / \texttt{401}} (0,-7.4);
+\end{tikzpicture}
+\caption{Diagrama de seqüència del flux d'autenticació}
+\label{fig:auth-flux}
+\end{figure}
+
+\subsection{Backend: FastAPI}
+
+El backend és una API REST desenvolupada amb \textbf{FastAPI} \cite{fastapi2024} (Python~3.13) i desplegada a \textbf{Fly.io} \cite{flyio2024}. La gestió de dependències es realitza amb \texttt{uv}, un gestor de paquets Python d'alta velocitat. Els endpoints disponibles són:
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{llll}
+\toprule
+\textbf{Mètode} & \textbf{Endpoint} & \textbf{Auth} & \textbf{Descripció} \\
+\midrule
+POST   & \texttt{/questions}                              & Sí & Genera 5 preguntes personalitzades \\
+POST   & \texttt{/recommend}                              & Sí & Genera 5 recomanacions de TFG \\
+GET    & \texttt{/recommendation/\{id\}}                  & No & Consulta una recomanació per ID \\
+GET    & \texttt{/recommendations}                        & No & Llista totes les recomanacions \\
+GET    & \texttt{/recommend/random}                       & No & Genera una recomanació aleatòria \\
+GET    & \texttt{/recommendation/\{id\}/elaborate/\{i\}}  & Sí & Detall complet d'una recomanació \\
+PATCH  & \texttt{/recommendation/\{id\}/rating}           & Sí & Desa valoració de l'usuari (1--5) \\
+\bottomrule
+\end{tabular}
+\caption{Endpoints de la API REST}
+\label{tab:endpoints}
+\end{table}
+
+\subsection{Base de dades: SQLite}
+
+La persistència es gestiona amb \textbf{SQLite} a través de \textbf{SQLModel}, una biblioteca que combina SQLAlchemy i Pydantic. La base de dades s'emmagatzema en un volum persistent de Fly.io (\texttt{/app/data/database.db}), garantint la durabilitat de les dades entre desplegaments i reinicis.
+
+L'esquema consisteix en una única taula amb migracions gestionades al \textit{startup} de l'aplicació:
+
+\begin{lstlisting}[language=Python, caption=Model de dades (SQLModel)]
+class Recommendation(SQLModel, table=True):
+    id: str              # UUID, clau primaria
+    data: str            # JSON serialitzat amb les recomanacions
+    rating: int | None   # Valoració opcional (1-5)
+\end{lstlisting}
+
+% =============================================
+\section{Autenticació}
+% =============================================
+
+El sistema d'autenticació es basa en \textbf{Firebase Authentication} de Google \cite{firebase2024auth}, que gestiona el cicle de vida complet dels tokens JWT sense necessitat d'implementar cap servidor d'autenticació propi. Aquest enfocament simplifica el codi i delega la seguretat a una infraestructura provada i mantinguda per Google.
+
+\subsection{Flux d'autenticació}
+
+El procés d'autenticació segueix els passos següents:
+
+\begin{enumerate}
+    \item L'usuari clica ``Continua amb Google'' al frontend Angular.
+    \item Firebase obre un popup OAuth2 de Google i gestiona el flux d'autorització.
+    \item En cas d'èxit, Firebase retorna un \textbf{JWT \textit{id\_token}} signat al frontend.
+    \item El frontend inclou aquest token en la capçalera HTTP de cada petició protegida:
+          \texttt{Authorization: Bearer <id\_token>}
+    \item El backend extreu el token i el verifica criptogràficament amb el SDK de Firebase Admin.
+    \item Si el token és vàlid i no ha expirat, es processa la petició; en cas contrari es retorna un error \texttt{401 Unauthorized}.
+\end{enumerate}
+
+\subsection{Implementació al backend}
+
+La validació del token s'implementa com una dependència de FastAPI injectada als endpoints protegits:
+
+\begin{lstlisting}[language=Python, caption=Dependència d'autenticació (FastAPI)]
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
+) -> dict:
+    token = credentials.credentials
+    try:
+        decoded_token = auth.verify_id_token(token)
+        return decoded_token          # uid, email, etc.
+    except Exception:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or expired token",
+        )
+\end{lstlisting}
+
+La funció \texttt{auth.verify\_id\_token()} verifica la signatura RSA del token usant les claus públiques de Google, comprova la data d'expiració (\texttt{exp}) i valida que el \textit{audience} (\texttt{aud}) coincideixi amb el projecte Firebase correcte. Les credencials del compte de servei Firebase s'emmagatzemen com a \textbf{secret de Fly.io} (\texttt{FIREBASE\_SERVICE\_ACCOUNT}) i mai no s'inclouen al codi font del repositori.
+
+\subsection{Endpoints protegits vs.\ públics}
+
+Els endpoints de lectura sense efectes secundaris (\texttt{/recommendations}, \texttt{/recommendation/\{id\}}) no requereixen autenticació, cosa que facilita l'accés públic a les recomanacions generades. Els endpoints que generen contingut via OpenAI o que modifiquen dades (\texttt{/questions}, \texttt{/recommend}, \texttt{/elaborate}, \texttt{/rating}) sí que requereixen un usuari autenticat, evitant l'abús de la API key d'OpenAI.
+
+% =============================================
+\section{Proves de Càrrega amb k6}
+% =============================================
+
+Per avaluar el comportament del backend sota càrrega, s'han realitzat proves de \textit{stress} amb \textbf{k6} \cite{k6docs}, una eina de testing de rendiment de codi obert escrita en Go que permet definir escenaris de càrrega en JavaScript.
+
+\subsection{Estratègia de testing}
+
+S'han provat els endpoints públics (sense autenticació), que representen la càrrega de lectura habitual del sistema. L'escenari inclou una fase de \textit{ramp-up}, un estat estacionari i un \textit{spike} de càrrega puntual:
+
+\begin{lstlisting}[language=JavaScript, caption=Script de proves de càrrega (k6/stress\_test.js)]
+import http from 'k6/http';
+import { check, sleep } from 'k6';
+import { Trend, Rate } from 'k6/metrics';
+
+const BASE_URL = 'https://tfg-recommender-backend.fly.dev';
+
+const responseTime = new Trend('response_time');
+const errorRate    = new Rate('error_rate');
+
+export const options = {
+  stages: [
+    { duration: '30s', target: 10 },  // ramp-up fins a 10 VUs
+    { duration: '1m',  target: 10 },  // estat estacionari
+    { duration: '30s', target: 50 },  // spike a 50 VUs
+    { duration: '30s', target: 0  },  // ramp-down
+  ],
+  thresholds: {
+    http_req_duration: ['p(95)<2000'], // p95 < 2s
+    error_rate:        ['rate<0.05'],  // < 5% errors
+  },
+};
+
+export default function () {
+  // Health check
+  const health = http.get(`${BASE_URL}/`);
+  check(health, { 'health 200': (r) => r.status === 200 });
+  responseTime.add(health.timings.duration);
+  errorRate.add(health.status !== 200);
+
+  // Llistat de recomanacions (lectura DB)
+  const recs = http.get(`${BASE_URL}/recommendations`);
+  check(recs, { 'recommendations 200': (r) => r.status === 200 });
+  responseTime.add(recs.timings.duration);
+  errorRate.add(recs.status !== 200);
+
+  sleep(1);
+}
+\end{lstlisting}
+
+Per executar les proves:
+
+\begin{lstlisting}[language=bash]
+# Instal·lar k6 (Windows)
+winget install k6 --source winget
+
+# Executar
+k6 run k6/stress_test.js
+\end{lstlisting}
+
+\subsection{Resultats}
+
+Les proves s'han executat contra el backend desplegat a Fly.io (regió \texttt{cdg}, París), amb un escenari de fins a 50 usuaris virtuals concurrents durant 2 minuts i 30 segons. Es van completar 2.235 iteracions i 4.470 peticions HTTP en total:
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Mètrica} & \textbf{GET /} & \textbf{GET /recommendations} \\
+\midrule
+Temps mitjà de resposta     & 42 ms         & 42 ms         \\
+Mediana                     & 33 ms         & 33 ms         \\
+Percentil 95 (p95)          & 37 ms         & 37 ms         \\
+Peticions per segon         & 14.8 req/s    & 14.8 req/s    \\
+Taxa d'errors               & 0\%           & 0\%           \\
+\bottomrule
+\end{tabular}
+\caption{Resultats de les proves de càrrega amb fins a 50 VUs (Fly.io, regió cdg)}
+\label{tab:results}
+\end{table}
+
+\textbf{Ambdós thresholds superats}: p(95) = 36,5 ms (límit: 2.000 ms) i taxa d'errors = 0\% (límit: 5\%). El temps màxim de 13,5 s correspon al \textit{cold start} inicial de la màquina (Fly.io apaga la instància quan no hi ha tràfic).
+
+\textit{Nota}: els endpoints que involucren OpenAI (\texttt{/recommend/random}, \texttt{/questions}) no s'han inclòs en les proves de càrrega perquè presenten temps de resposta entre 3 i 10 segons a causa de la latència inherent als models de llengua gran. Això és esperat i acceptable per a l'ús previst del sistema.
+
+% =============================================
+\section{Codi Font i Desplegament}
+% =============================================
+
+\subsection{Repositori}
+
+El codi font complet del projecte és accessible públicament a:
+
+\begin{center}
+\url{https://github.com/tfg-sergi-rius/tfg}
+\end{center}
+
+L'estructura del repositori és la següent:
+
+\begin{lstlisting}[numbers=none]
+tfg/
+  backend/          # API FastAPI (Python 3.13)
+    main.py         # Punt d'entrada, CORS, startup
+    database.py     # Connexio SQLite (SQLModel)
+    models.py       # Esquema de dades
+    routes/         # Endpoints REST
+    services/       # Integracio OpenAI
+    auth/           # Firebase Authentication
+  frontend/         # SPA Angular 21
+    src/app/        # Components, serveis, rutes
+    src/environments/ # Configuracio per entorn
+  fly.toml          # Configuracio de Fly.io
+  docker-compose.yml # Entorn de desenvolupament local
+  k6/
+    stress_test.js  # Script de proves de carrega
+\end{lstlisting}
+
+\subsection{URLs de l'aplicació desplegada}
+
+\begin{itemize}
+    \item \textbf{Frontend:} \url{https://tfg-sergi-rius.github.io/tfg/}
+    \item \textbf{Backend API:} \url{https://tfg-recommender-backend.fly.dev/}
+    \item \textbf{Documentació API (Swagger):} \url{https://tfg-recommender-backend.fly.dev/docs}
+\end{itemize}
+
+\bibliographystyle{plain}
+\begin{thebibliography}{99}
+
+\bibitem{vaswani2017attention}
+Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A.~N., Kaiser, \L{}., i Polosukhin, I.
+\newblock Attention is all you need.
+\newblock \textit{Advances in Neural Information Processing Systems}, 30, 2017.
+
+\bibitem{brown2020gpt3}
+Brown, T., Mann, B., Ryder, N., et al.
+\newblock Language models are few-shot learners.
+\newblock \textit{Advances in Neural Information Processing Systems}, 33, 2020.
+
+\subsection*{Webgrafia}
+
+\bibitem{openai2024api}
+OpenAI.
+\newblock \textit{OpenAI API Reference}.
+\newblock \url{https://platform.openai.com/docs}, 2024.
+\newblock [Consultat: maig 2026]
+
+\bibitem{angular2024}
+Google.
+\newblock \textit{Angular Documentation}.
+\newblock \url{https://angular.dev}, 2024.
+\newblock [Consultat: maig 2026]
+
+\bibitem{fastapi2024}
+Ramírez, S.
+\newblock \textit{FastAPI Documentation}.
+\newblock \url{https://fastapi.tiangolo.com}, 2024.
+\newblock [Consultat: maig 2026]
+
+\bibitem{firebase2024auth}
+Google.
+\newblock \textit{Firebase Authentication Documentation}.
+\newblock \url{https://firebase.google.com/docs/auth}, 2024.
+\newblock [Consultat: maig 2026]
+
+\bibitem{flyio2024}
+Fly.io.
+\newblock \textit{Fly.io Documentation}.
+\newblock \url{https://fly.io/docs}, 2024.
+\newblock [Consultat: maig 2026]
+
+\bibitem{k6docs}
+Grafana Labs.
+\newblock \textit{k6 Documentation}.
+\newblock \url{https://grafana.com/docs/k6/latest/}, 2024.
+\newblock [Consultat: maig 2026]
+
+\end{thebibliography}
+
+\end{document}
